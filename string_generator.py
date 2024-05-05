@@ -25,7 +25,7 @@ with open('SampleTestCases/input1.txt', 'r') as file:
 def insert_string_at_positions(base_string, positions):
     modified_string = base_string
     for pos in positions:
-        modified_string = modified_string[:pos] + modified_string + modified_string[pos:]
+        modified_string = modified_string[:pos+1] + modified_string + modified_string[pos+1:]
     return modified_string
 
 
