@@ -1,4 +1,3 @@
-import numpy as np
 import math
 import time
 import psutil
@@ -51,40 +50,44 @@ mismatch_cost = {
 }
 
 
-def simple_version(x: str, y: str, Pxy: dict, pgap: int):
+def simple_version(x: str, y: str, Pxy: dict, p_gap: int):
     m = len(x)
     n = len(y)
-    dp = np.zeros([m + 1, n + 1], dtype=int)  # int dp[m+1][n+1] = {0};
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
     i = 0
     j = 0
     # initialising the table
-    dp[0:(m + 1), 0] = [i * pgap for i in range(m + 1)]
-    dp[0, 0:(n + 1)] = [i * pgap for i in range(n + 1)]
+    """ dp[0:(m+1),0] = [ i * p_gap for i in range(m+1)]
+    dp[0,0:(n+1)] = [ i * p_gap for i in range(n+1)] """
+
+    for i in range(m + 1):
+        dp[i][0] = i * p_gap
+    for i in range(n + 1):
+        dp[0][i] = i * p_gap
 
     i = 1
     for i in range(1, len(x) + 1):
         for j in range(1, len(y) + 1):
             if x[i - 1] == y[j - 1]:
                 min_value = min(dp[i - 1][j - 1],
-                                dp[i - 1][j] + pgap,
-                                dp[i][j - 1] + pgap)
+                                dp[i - 1][j] + p_gap,
+                                dp[i][j - 1] + p_gap)
                 dp[i][j] = min_value
             else:
                 min_value = min(dp[i - 1][j - 1] + Pxy[x[i - 1]][y[j - 1]],
-                                dp[i - 1][j] + pgap,
-                                dp[i][j - 1] + pgap)
+                                dp[i - 1][j] + p_gap,
+                                dp[i][j - 1] + p_gap)
                 dp[i][j] = min_value
 
-    l = n + m  # maximum possible length
+    l = n + m
     i = m
     j = n
 
     xpos = l
     ypos = l
 
-    # Final answers for the respective strings
-    xans = np.zeros(l + 1, dtype=int)
-    yans = np.zeros(l + 1, dtype=int)
+    xans = [0] * (l + 1)
+    yans = [0] * (l + 1)
 
     pen = 0
     while not (i == 0 or j == 0):
@@ -106,18 +109,18 @@ def simple_version(x: str, y: str, Pxy: dict, pgap: int):
             i -= 1
             j -= 1
 
-        elif (dp[i - 1][j] + pgap) == dp[i][j]:
+        elif (dp[i - 1][j] + p_gap) == dp[i][j]:
             xans[xpos] = ord(x[i - 1])
             yans[ypos] = ord('_')
-            pen = pen + pgap
+            pen = pen + p_gap
             xpos -= 1
             ypos -= 1
             i -= 1
 
-        elif (dp[i][j - 1] + pgap) == dp[i][j]:
+        elif (dp[i][j - 1] + p_gap) == dp[i][j]:
             xans[xpos] = ord('_')
             yans[ypos] = ord(y[j - 1])
-            pen = pen + pgap
+            pen = pen + p_gap
             xpos -= 1
             ypos -= 1
             j -= 1
