@@ -3,6 +3,7 @@ import math
 import time
 import psutil
 
+
 with open('SampleTestCases/input5.txt', 'r') as file:
     # Read the first string
     first_string = file.readline().strip()
@@ -238,7 +239,20 @@ def efficient_version(x, y):
     return min_cost, z, w
 
 
+start_time = time.time()
+
 min_cost, z, w = efficient_version(modified_first_string, modified_second_string)
+
+end_time = time.time()
+
+time_taken = (end_time - start_time)*1000
+
+process = psutil.Process()
+memory_info = process.memory_info()
+memory_consumed = int(memory_info.rss / 1024)
+
 print(str(min_cost))
 print(z)
 print(w)
+print(time_taken)
+print(memory_consumed)
