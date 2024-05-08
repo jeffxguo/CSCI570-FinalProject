@@ -3,6 +3,7 @@ import psutil
 import math
 import sys
 file = sys.argv[1]
+out = sys.argv[2]
 with open(file, 'r') as file:
     first_string = file.readline().strip()
     first_positions = []
@@ -155,7 +156,7 @@ alignment_result = simple_version(modified_first_string, modified_second_string,
 execution_time = time_wrapper(lambda: simple_version(modified_first_string, modified_second_string, table, p_gap))
 memory_used = process_memory(lambda: simple_version(modified_first_string, modified_second_string, table, p_gap))
 score, x_seq, y_seq = alignment_result
-with open('output.txt', 'w') as file:
+with open(out, 'w') as file:
     file.write(f"{score}\n")
     file.write(f"{x_seq}\n")
     file.write(f"{y_seq}\n")

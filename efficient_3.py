@@ -1,9 +1,11 @@
 import math
 import time
 import psutil
+import sys
 
-
-with open('SampleTestCases/input5.txt', 'r') as file:
+file = sys.argv[1]
+out = sys.argv[2]
+with open(file, 'r') as file:
     # Read the first string
     first_string = file.readline().strip()
 
@@ -33,13 +35,9 @@ def insert_string_at_positions(base_string, positions):
     return modified_string
 
 
-# Insert strings at positions
 modified_first_string = insert_string_at_positions(first_string, first_positions)
 modified_second_string = insert_string_at_positions(second_string, second_positions)
 
-# Print the modified strings
-print("Modified First String:", modified_first_string)
-print("Modified Second String:", modified_second_string)
 
 gap_penalty = 30
 mismatch_cost = {
@@ -56,9 +54,6 @@ def simple_version(x: str, y: str, Pxy: dict, p_gap: int):
     dp = [[0] * (n + 1) for _ in range(m + 1)]
     i = 0
     j = 0
-    # initialising the table
-    """ dp[0:(m+1),0] = [ i * p_gap for i in range(m+1)]
-    dp[0,0:(n+1)] = [ i * p_gap for i in range(n+1)] """
 
     for i in range(m + 1):
         dp[i][0] = i * p_gap
@@ -91,7 +86,6 @@ def simple_version(x: str, y: str, Pxy: dict, p_gap: int):
 
     pen = 0
     while not (i == 0 or j == 0):
-        # print(f"i: {i}, j: {j}")
         if x[i - 1] == y[j - 1]:
             xans[xpos] = ord(x[i - 1])
             yans[ypos] = ord(y[j - 1])
@@ -143,10 +137,6 @@ def simple_version(x: str, y: str, Pxy: dict, p_gap: int):
             yans[ypos] = ord('_')
             ypos -= 1
 
-    # Since we have assumed the answer to be n+m long,
-    # we need to remove the extra gaps in the starting
-    # id represents the index from which the arrays
-    # xans, yans are useful
     id = 1
     i = l
     while i >= 1:
@@ -156,24 +146,17 @@ def simple_version(x: str, y: str, Pxy: dict, p_gap: int):
 
         i -= 1
 
-    # Printing the final answer
-    print(f"Minimum Penalty in aligning the genes = {dp[m][n]}")
-    print("The aligned genes are:")
-    # X
     i = id
     x_seq = ""
     while i <= l:
         x_seq += chr(xans[i])
         i += 1
-    print(f"X seq: {x_seq}")
 
-    # Y
     i = id
     y_seq = ""
     while i <= l:
         y_seq += chr(yans[i])
         i += 1
-    print(f"Y seq: {y_seq}")
 
     return dp[m][n], x_seq, y_seq
 
@@ -254,8 +237,9 @@ process = psutil.Process()
 memory_info = process.memory_info()
 memory_consumed = int(memory_info.rss / 1024)
 
-print(str(min_cost))
-print(z)
-print(w)
-print(time_taken)
-print(memory_consumed)
+with open(out, 'w') as file:
+    file.write(f"{min_cost}\n")
+    file.write(f"{z}\n")
+    file.write(f"{w}\n")
+    file.write(f"{time_taken}\n")
+    file.write(f"{memory_consumed} \n")
